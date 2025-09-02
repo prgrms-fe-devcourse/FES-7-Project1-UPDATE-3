@@ -9,7 +9,6 @@ export default function render(app) {
 
 render(App);
 
-// 테스트를 위한 변수
 const TEST_DOCUMENTS = [
   {
     id: 1,
