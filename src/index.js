@@ -34,4 +34,5 @@ const TEST_DOCUMENTS = [
   },
 ];
 
-Sidebar(TEST_DOCUMENTS);
+const root = document.querySelector("#root");
+Sidebar(root, TEST_DOCUMENTS);
