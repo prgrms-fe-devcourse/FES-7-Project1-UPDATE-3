@@ -1,14 +1,39 @@
-const Sidebar = (documents) => {
-  const $documentList = document.querySelector("#document-list");
+import "../styles/sidebar.css";
 
-  $documentList.innerHTML = "";
+const Sidebar = (parentEl, documents) => {
+  /* 유효성 검사*/
+  if (!parentEl) {
+    console.warn("사이드바의 부모 요소을 찾을 수 없습니다.");
+    return;
+  }
+  parentEl.innerHTML = "";
 
-  const renderDocuments = (parentEl, docs) => {
+  /* 사이드바 기본 구조 생성 */
+  // 사이드바 전체를 감싸는 aside 생성
+  const sidebarEl = document.createElement("aside");
+  sidebarEl.id = "sidebar";
+
+  // 사이드바 헤더 영역
+  const sidebarHeader = document.createElement("div");
+  sidebarHeader.className = "sidebar-header";
+
+  // 임시 새 페이지 만들기 버튼
+  const addButton = document.createElement("button");
+  addButton.className = "add-page-button";
+  addButton.textContent = "새 페이지 만들기";
+  sidebarHeader.appendChild(addButton);
+
+  // 문서 목록을 담을 네비게이션 영역
+  const documentListNav = document.createElement("nav");
+  documentListNav.id = "document-list";
+
+  /* 문서 트리 렌더링 */
+  const renderDocuments = (parent, docs) => {
     const ul = document.createElement("ul");
     ul.className = "document-list";
 
     docs.forEach((doc) => {
-      // 문서 영역
+      // DOM 구조 생성
       const li = document.createElement("li");
       li.className = "document-item";
 
@@ -21,40 +46,52 @@ const Sidebar = (documents) => {
       const toggleIconArea = document.createElement("span");
       toggleIconArea.className = "toggle-icon-area";
 
-      // 문서 트리 접기/펼치기
-      const toggleButton = document.createElement("span");
-      toggleButton.className = "toggle-button";
-      toggleButton.textContent = "▶";
+      // 하위 문서가 있으면 토글 버튼 생성
+      if (doc.documents && doc.documents.length > 0) {
+        const toggleButton = document.createElement("span");
+        toggleButton.className = "toggle-button";
+        toggleButton.textContent = "▶";
+        toggleIconArea.appendChild(toggleButton);
 
-      toggleIconArea.appendChild(toggleButton);
+        // 토글 버튼 클릭 이벤트 리스너
+        toggleButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const childUl = li.querySelector("ul");
+          if (childUl) {
+            childUl.classList.toggle("hidden");
+            toggleButton.textContent = childUl.classList.contains("hidden") ? "▶" : "▼";
+          }
+        });
+      }
 
-      toggleButton.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const childUl = li.querySelector("ul");
-        if (childUl) {
-          childUl.classList.toggle("hidden");
-          toggleButton.textContent = childUl.classList.contains("hidden") ? "▶" : "▼";
-        }
-      });
-
+      // <span>
       pageInfo.appendChild(toggleIconArea);
       pageInfo.appendChild(pageTitle);
 
+      // <div>
       li.appendChild(pageInfo);
 
-      // 재귀 호출, 하위 문서 있으면 렌더링
+      // 하위 문서 있으면 기본으로 닫음 상태로 전환
       if (doc.documents && doc.documents.length > 0) {
         renderDocuments(li, doc.documents);
-        li.querySelector("ul").classList.add("hidden"); // 초기 상태 숨김으로 설정
+        li.querySelector("ul").classList.add("hidden");
       }
 
+      // <li>
       ul.appendChild(li);
     });
-
-    parentEl.appendChild(ul);
+    // <ui>
+    parent.appendChild(ul);
   };
 
-  renderDocuments($documentList, documents);
+  renderDocuments(documentListNav, documents); // 재귀 호출, 하위 문서 있으면 렌더링
+
+  /* 렌더링 결과물 추가 */
+  sidebarEl.appendChild(sidebarHeader);
+  sidebarEl.appendChild(documentListNav);
+
+  // 최종적으로 root에 사이드바 추가
+  parentEl.appendChild(sidebarEl);
 };
 
 export default Sidebar;

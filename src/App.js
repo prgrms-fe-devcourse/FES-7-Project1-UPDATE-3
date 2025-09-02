@@ -1,4 +1,4 @@
-import "./style/reset.css";
+import "./styles/reset.css";
 import { createRouter } from "./router";
 
 export default function App() {
