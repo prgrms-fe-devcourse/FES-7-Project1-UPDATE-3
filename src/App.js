@@ -8,9 +8,10 @@ export default function App() {
   const main = document.createElement("main");
   main.appendChild(Sidebar());
 
-  router.addRoute("/", "emptyPage");
-  router.addRoute("/documents", "emptyPage");
+  router.addRoute("/", "empty");
+  router.addRoute("/documents", "empty");
   router.addRoute("/documents/:id", main);
+  router.start();
 
   return main;
 }
