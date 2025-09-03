@@ -1,8 +1,12 @@
 import "./style.css";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import underArrowIcon from "/public/assets/under-arrow.svg?url";
 =======
 >>>>>>> 16d5b20 (feat: Sidebar가 DOM구조를 return 하도록 구조 변경)
+=======
+import underArrowIcon from "/public/assets/under-arrow.svg?url";
+>>>>>>> 1c39904 (sidebar의 style.css 구현하여 호버 기능 제외 UI 구현)
 
 // 테스트를 위한 더미 데이터
 const TEST_DOCUMENTS = [
@@ -25,6 +29,9 @@ const TEST_DOCUMENTS = [
 ];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1c39904 (sidebar의 style.css 구현하여 호버 기능 제외 UI 구현)
 const createAddPageButton = () => {
   const addPageButtonArea = document.createElement("div");
   addPageButtonArea.className = "bottom-add-page-area";
@@ -41,8 +48,11 @@ const createAddPageButton = () => {
   return addPageButtonArea;
 };
 
+<<<<<<< HEAD
 =======
 >>>>>>> 16d5b20 (feat: Sidebar가 DOM구조를 return 하도록 구조 변경)
+=======
+>>>>>>> 1c39904 (sidebar의 style.css 구현하여 호버 기능 제외 UI 구현)
 const Sidebar = () => {
   /* 사이드바 기본 구조 생성 */
   // 사이드바 전체를 감싸는 aside 생성
@@ -91,10 +101,14 @@ const Sidebar = () => {
       const toggleButton = document.createElement("span");
       toggleButton.className = "toggle-button";
 <<<<<<< HEAD
+<<<<<<< HEAD
       toggleButton.textContent = "▶";
 =======
       toggleButton.innerHTML = `<img src="../../../public/assets/under-Arrow.svg" alt="toggle arrow">`;
 >>>>>>> e0e7f14 (feat: sidebar 관련 svg 파일 추가)
+=======
+      toggleButton.textContent = "▶";
+>>>>>>> 1c39904 (sidebar의 style.css 구현하여 호버 기능 제외 UI 구현)
       leftToggleArea.appendChild(toggleButton);
 
       // 새 문서 추가
@@ -160,6 +174,7 @@ const Sidebar = () => {
       // <li>
       ul.appendChild(li);
     });
+
     // <ul>
     parent.appendChild(ul);
   };
