@@ -90,7 +90,11 @@ const Sidebar = () => {
       // 접기/펴기
       const toggleButton = document.createElement("span");
       toggleButton.className = "toggle-button";
+<<<<<<< HEAD
       toggleButton.textContent = "▶";
+=======
+      toggleButton.innerHTML = `<img src="../../../public/assets/under-Arrow.svg" alt="toggle arrow">`;
+>>>>>>> e0e7f14 (feat: sidebar 관련 svg 파일 추가)
       leftToggleArea.appendChild(toggleButton);
 
       // 새 문서 추가
