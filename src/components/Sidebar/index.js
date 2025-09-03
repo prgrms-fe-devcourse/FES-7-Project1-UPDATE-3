@@ -1,13 +1,6 @@
 import "./style.css";
 
-const Sidebar = (parentEl, documents) => {
-  /* 유효성 검사*/
-  if (!parentEl) {
-    console.warn("사이드바의 부모 요소을 찾을 수 없습니다.");
-    return;
-  }
-  parentEl.innerHTML = "";
-
+const Sidebar = (documents) => {
   /* 사이드바 기본 구조 생성 */
   // 사이드바 전체를 감싸는 aside 생성
   const sidebarEl = document.createElement("aside");
@@ -90,8 +83,8 @@ const Sidebar = (parentEl, documents) => {
   sidebarEl.appendChild(sidebarHeader);
   sidebarEl.appendChild(documentListNav);
 
-  // 최종적으로 root에 사이드바 추가
-  parentEl.appendChild(sidebarEl);
+  // 생성된 aside 요소를 반환
+  return sidebarEl;
 };
 
 export default Sidebar;
