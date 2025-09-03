@@ -5,7 +5,6 @@ export function createRouter() {
 
   const matchRoute = () => {
     const { pathname } = location;
-    console.log("pathname", pathname);
 
     const route = routes.find((route) => route.regex.test(pathname));
     if (!route) return "404";
