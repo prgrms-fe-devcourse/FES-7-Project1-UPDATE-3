@@ -1,5 +1,8 @@
 import "./style.css";
+<<<<<<< HEAD
 import underArrowIcon from "/public/assets/under-arrow.svg?url";
+=======
+>>>>>>> 16d5b20 (feat: Sidebar가 DOM구조를 return 하도록 구조 변경)
 
 // 테스트를 위한 더미 데이터
 const TEST_DOCUMENTS = [
@@ -21,6 +24,7 @@ const TEST_DOCUMENTS = [
   },
 ];
 
+<<<<<<< HEAD
 const createAddPageButton = () => {
   const addPageButtonArea = document.createElement("div");
   addPageButtonArea.className = "bottom-add-page-area";
@@ -37,6 +41,8 @@ const createAddPageButton = () => {
   return addPageButtonArea;
 };
 
+=======
+>>>>>>> 16d5b20 (feat: Sidebar가 DOM구조를 return 하도록 구조 변경)
 const Sidebar = () => {
   /* 사이드바 기본 구조 생성 */
   // 사이드바 전체를 감싸는 aside 생성
@@ -150,7 +156,6 @@ const Sidebar = () => {
       // <li>
       ul.appendChild(li);
     });
-
     // <ul>
     parent.appendChild(ul);
   };

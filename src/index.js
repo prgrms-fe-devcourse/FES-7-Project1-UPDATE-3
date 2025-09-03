@@ -1,5 +1,4 @@
 import App from "./App";
-import Sidebar from "./components/sidebar.js";
 
 export default function render(app) {
   const root = document.getElementById("root");
@@ -8,31 +7,3 @@ export default function render(app) {
 }
 
 render(App);
-
-const TEST_DOCUMENTS = [
-  {
-    id: 1,
-    title: "최상위 페이지",
-    documents: [
-      {
-        id: 2,
-        title: "하위 페이지 1",
-        documents: [
-          {
-            id: 3,
-            title: "하위 페이지 1-1",
-            documents: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "최상위 페이지 2",
-    documents: [],
-  },
-];
-
-const root = document.querySelector("#root");
-Sidebar(root, TEST_DOCUMENTS);
