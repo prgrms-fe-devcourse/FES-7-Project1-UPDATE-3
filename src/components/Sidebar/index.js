@@ -1,6 +1,26 @@
 import "./style.css";
 
-const Sidebar = (documents) => {
+// 테스트를 위한 더미 데이터
+const TEST_DOCUMENTS = [
+  {
+    id: 1,
+    title: "최상위 페이지",
+    documents: [
+      {
+        id: 2,
+        title: "하위 페이지 1",
+        documents: [],
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "최상위 페이지 2",
+    documents: [],
+  },
+];
+
+const Sidebar = () => {
   /* 사이드바 기본 구조 생성 */
   // 사이드바 전체를 감싸는 aside 생성
   const sidebarEl = document.createElement("aside");
@@ -77,7 +97,7 @@ const Sidebar = (documents) => {
     parent.appendChild(ul);
   };
 
-  renderDocuments(documentListNav, documents); // 재귀 호출, 하위 문서 있으면 렌더링
+  renderDocuments(documentListNav, TEST_DOCUMENTS); // 재귀 호출, 하위 문서 있으면 렌더링
 
   /* 렌더링 결과물 추가 */
   sidebarEl.appendChild(sidebarHeader);
