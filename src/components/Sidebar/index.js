@@ -18,6 +18,53 @@ const createAddPageButton = () => {
   return addPageButtonArea;
 };
 
+// 개별 문서(li) 항목을 생성하는 함수
+const createDocumentItem = (doc) => {
+  const li = document.createElement("li"); // <li>
+  li.className = "document-item";
+  li.dataset.id = doc.id;
+
+  const pageInfo = document.createElement("div");
+  pageInfo.className = "page-info";
+
+  // 좌측, 우측 토글 영역 생성
+  const leftToggleArea = document.createElement("div");
+  leftToggleArea.className = "left-toggle-area";
+  const rightToggleArea = document.createElement("div");
+  rightToggleArea.className = "right-toggle-area";
+
+  // 헤더 영역 제목 생성
+  const pageLink = document.createElement("a");
+  pageLink.href = `/documents/${doc.id}`;
+  const pageTitle = document.createElement("span");
+  pageTitle.className = "page-title";
+  pageTitle.textContent = doc.title;
+  pageLink.appendChild(pageTitle);
+
+  // 버튼 요소 생성
+  const toggleButton = document.createElement("span");
+  toggleButton.className = "toggle-button";
+  toggleButton.textContent = "▶";
+  const deleteButton = document.createElement("span");
+  deleteButton.className = "delete-button";
+  deleteButton.textContent = "🗑️";
+  const addButton = document.createElement("span");
+  addButton.className = "add-child-button";
+  addButton.textContent = "+";
+
+  leftToggleArea.appendChild(toggleButton);
+  rightToggleArea.appendChild(deleteButton);
+  rightToggleArea.appendChild(addButton);
+
+  pageInfo.appendChild(leftToggleArea);
+  pageInfo.appendChild(pageTitle);
+  pageInfo.appendChild(rightToggleArea);
+
+  li.appendChild(pageInfo); // </li>
+
+  return li;
+};
+
 const Sidebar = async () => {
   /* 사이드바 기본 구조 생성 */
   // 사이드바 전체를 감싸는 aside 생성
@@ -27,6 +74,9 @@ const Sidebar = async () => {
   // 사이드바 헤더 영역
   const sidebarHeader = document.createElement("div");
   sidebarHeader.className = "sidebar-header";
+  const userNameText = document.createElement("span");
+  userNameText.textContent = `Update의 Notion`;
+  userNameText.className = "user-name";
 
   // 문서 목록을 담을 네비게이션 영역
   const documentListNav = document.createElement("nav");
@@ -38,81 +88,28 @@ const Sidebar = async () => {
     ul.className = "document-list";
 
     docs.forEach((doc) => {
-      // 문서DOM 구조 생성
-      const li = document.createElement("li");
-      li.className = "document-item";
-      li.dataset.id = doc.id;
-      li.dataset.parent = doc.documents;
-
-      const pageInfo = document.createElement("div");
-      pageInfo.className = "page-info";
-
-      // 문서 제목 영역
-      const pageTitleArea = document.createElement("div");
-      pageTitleArea.className = "page-title-area";
-
-      // 좌측, 우측 토글 아이콘 영역
-      const leftToggleArea = document.createElement("div");
-      leftToggleArea.className = "left-toggle-area";
-
-      const rightToggleArea = document.createElement("div");
-      rightToggleArea.className = "right-toggle-area";
-
-      // 문서 제목
-      const pageTitle = document.createElement("span");
-      pageTitle.className = "page-title";
-      pageTitle.textContent = doc.title;
-      pageTitleArea.appendChild(pageTitle);
-
-      // 접기/펴기
-      const toggleButton = document.createElement("span");
-      toggleButton.className = "toggle-button";
-      toggleButton.textContent = "▶";
-      leftToggleArea.appendChild(toggleButton);
-
-      // 휴지통
-      const deleteButton = document.createElement("span");
-      deleteButton.className = "delete-button";
-      deleteButton.textContent = "🗑️";
-      rightToggleArea.appendChild(deleteButton);
-
-      // 새 문서 추가
-      const addButton = document.createElement("span");
-      addButton.className = "add-child-button";
-      addButton.textContent = "+";
-      rightToggleArea.appendChild(addButton);
-
-      // <div>
-      pageInfo.appendChild(leftToggleArea);
-      pageInfo.appendChild(pageTitle);
-      pageInfo.appendChild(rightToggleArea);
-
-      // <div>
-      li.appendChild(pageInfo);
-
-      // 하위 문서 있으면 기본으로 닫음 상태로 전환
+      const li = createDocumentItem(doc);
+      // 하위 문서 있으면 재귀 호출
       if (doc.documents && doc.documents.length > 0) {
         renderDocuments(li, doc.documents);
         li.querySelector("ul").classList.add("hidden");
       }
 
-      // <li>
       ul.appendChild(li);
     });
-
-    // <ul>
     parent.appendChild(ul);
   };
-
   // API 호출 및 렌더링
   const documents = await apiDocs.getList();
+  console.log(documents);
   renderDocuments(documentListNav, documents); // 재귀 호출, 하위 문서 있으면 렌더링
 
-  // 모든 문서 최하단에 [새 페이지 추가] 버튼
+  // 모든 문서의 최하단에 [새 페이지 추가] 버튼
   const BottomAddPageButton = createAddPageButton();
   documentListNav.appendChild(BottomAddPageButton);
 
   /* 렌더링 결과물 추가 */
+  sidebarHeader.appendChild(userNameText);
   sidebarEl.appendChild(sidebarHeader);
   sidebarEl.appendChild(documentListNav);
 
@@ -148,30 +145,40 @@ const Sidebar = async () => {
       try {
         await apiDocs.create({ parent: parentId });
         const updatedDocuments = await apiDocs.getList();
+
         // 기존 문서 목록을 비우고 새로운 문서 목록으로 다시 렌더링
         const documentListNav = document.getElementById("document-list");
         documentListNav.innerHTML = "";
         renderDocuments(documentListNav, updatedDocuments);
+        // 모든 문서 최하단에 [새 페이지 추가] 버튼
+        documentListNav.appendChild(BottomAddPageButton);
       } catch (error) {
         console.error("문서 생성 중 오류", error);
       }
-
-      console.log("추가");
     } else if (target.classList.contains("delete-button")) {
       // '휴지통' 버튼 클릭
       const parentLi = target.closest(".document-item");
       const documentId = parentLi ? parentLi.dataset.id : null;
+      if (documentId) {
+        try {
+          await apiDocs.del(documentId);
+          parentLi.remove();
+        } catch (error) {
+          console.error("문서 삭제 중 오류 발생:", error);
+        }
+      }
+    } else if (target.closest(".bottom-add-page-area")) {
+      // 최하단 '새 페이지 추가' 버튼 클릭
       try {
-        await apiDocs.del(documentId);
-        const updatedDocuments = await apiDocs.getList();
+        await apiDocs.create({});
+        const updatedDocuments = await apiDocs.getList(); // 기존 문서 목록을 비우고 새로운 문서 목록으로 다시 렌더링
 
-        // 기존 문서 목록을 비우고 새로운 문서 목록으로 다시 렌더링
         const documentListNav = document.getElementById("document-list");
         documentListNav.innerHTML = "";
         renderDocuments(documentListNav, updatedDocuments);
+        documentListNav.appendChild(BottomAddPageButton);
       } catch (error) {
-        console.error("문서 삭제 중 오류 발생:", error);
-        console.log("삭제");
+        console.error("루트 문서 생성 중 오류 발생:", error);
       }
     }
   });

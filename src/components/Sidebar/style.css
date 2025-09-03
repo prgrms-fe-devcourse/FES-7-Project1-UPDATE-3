@@ -2,8 +2,8 @@
   width: 240px;
   min-width: 240px;
   height: 100vh;
-  background-color: #f7f6f3; /* 노션 기본 배경색 */
-  border-right: 1px solid #e0e0e0;
+  background-color: #f9f8f7; /* 노션 기본 배경색 */
+  border-right: 1px solid #e0e0e0a5;
   padding: 12px 0 0;
   display: flex;
   flex-direction: column;
@@ -50,6 +50,7 @@
   display: none;
 }
 
+/* 왼쪽 토글 영역 */
 .left-toggle-area {
   width: 20px;
   height: 20px;
