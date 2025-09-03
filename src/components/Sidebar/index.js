@@ -41,6 +41,8 @@ const Sidebar = async () => {
       // 문서DOM 구조 생성
       const li = document.createElement("li");
       li.className = "document-item";
+      li.dataset.id = doc.id;
+      li.dataset.parent = doc.documents;
 
       const pageInfo = document.createElement("div");
       pageInfo.className = "page-info";
@@ -68,17 +70,17 @@ const Sidebar = async () => {
       toggleButton.textContent = "▶";
       leftToggleArea.appendChild(toggleButton);
 
-      // 새 문서 추가
-      const addButton = document.createElement("span");
-      addButton.className = "add-child-button";
-      addButton.textContent = "+";
-      rightToggleArea.appendChild(addButton);
-
       // 휴지통
       const deleteButton = document.createElement("span");
       deleteButton.className = "delete-button";
       deleteButton.textContent = "🗑️";
       rightToggleArea.appendChild(deleteButton);
+
+      // 새 문서 추가
+      const addButton = document.createElement("span");
+      addButton.className = "add-child-button";
+      addButton.textContent = "+";
+      rightToggleArea.appendChild(addButton);
 
       // <div>
       pageInfo.appendChild(leftToggleArea);
@@ -115,7 +117,7 @@ const Sidebar = async () => {
   sidebarEl.appendChild(documentListNav);
 
   // 이벤트리스너(이벤트 위임) sidebarEl에 붙힘
-  sidebarEl.addEventListener("click", (e) => {
+  sidebarEl.addEventListener("click", async (e) => {
     const target = e.target;
     // 접기/펴기 토글 버튼
     if (target.classList.contains("toggle-button")) {
@@ -143,12 +145,34 @@ const Sidebar = async () => {
       // '+' 버튼 클릭
       const parentLi = target.closest(".document-item");
       const parentId = parentLi ? parentLi.dataset.id : null;
+      try {
+        await apiDocs.create({ parent: parentId });
+        const updatedDocuments = await apiDocs.getList();
+        // 기존 문서 목록을 비우고 새로운 문서 목록으로 다시 렌더링
+        const documentListNav = document.getElementById("document-list");
+        documentListNav.innerHTML = "";
+        renderDocuments(documentListNav, updatedDocuments);
+      } catch (error) {
+        console.error("문서 생성 중 오류", error);
+      }
+
       console.log("추가");
     } else if (target.classList.contains("delete-button")) {
       // '휴지통' 버튼 클릭
       const parentLi = target.closest(".document-item");
       const documentId = parentLi ? parentLi.dataset.id : null;
-      console.log("삭제");
+      try {
+        await apiDocs.del(documentId);
+        const updatedDocuments = await apiDocs.getList();
+
+        // 기존 문서 목록을 비우고 새로운 문서 목록으로 다시 렌더링
+        const documentListNav = document.getElementById("document-list");
+        documentListNav.innerHTML = "";
+        renderDocuments(documentListNav, updatedDocuments);
+      } catch (error) {
+        console.error("문서 삭제 중 오류 발생:", error);
+        console.log("삭제");
+      }
     }
   });
 
