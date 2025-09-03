@@ -1,6 +1,7 @@
 import "./style.css";
 import apiDocs from "../../api/documents";
 
+// 하단 새 페이지 추가 버튼 생성
 const createAddPageButton = () => {
   const addPageButtonArea = document.createElement("div");
   addPageButtonArea.className = "bottom-add-page-area";
@@ -101,6 +102,7 @@ const Sidebar = async () => {
     parent.appendChild(ul);
   };
 
+  // API 호출 및 렌더링
   const documents = await apiDocs.getList();
   renderDocuments(documentListNav, documents); // 재귀 호출, 하위 문서 있으면 렌더링
 

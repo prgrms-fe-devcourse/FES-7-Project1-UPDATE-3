@@ -13,6 +13,6 @@ const create = () => {};
 
 const update = () => {};
 
-const del = () => {};
+const del = () => http.del(BASE_URL, HEADERS);
 
 export default { getList, get, create, update, del };
