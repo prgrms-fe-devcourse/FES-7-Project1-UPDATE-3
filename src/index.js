@@ -1,5 +1,5 @@
 import App from "./App";
-import Sidebar from "./components/sidebar.js";
+import Sidebar from "./components/Sidebar/index.js";
 
 export default function render(app) {
   const root = document.getElementById("root");
@@ -9,6 +9,8 @@ export default function render(app) {
 
 render(App);
 
+// Sidebar
+const root = document.querySelector("#root");
 const TEST_DOCUMENTS = [
   {
     id: 1,
@@ -33,6 +35,4 @@ const TEST_DOCUMENTS = [
     documents: [],
   },
 ];
-
-const root = document.querySelector("#root");
 Sidebar(root, TEST_DOCUMENTS);

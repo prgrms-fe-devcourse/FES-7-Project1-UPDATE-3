@@ -1,4 +1,4 @@
-import "../styles/sidebar.css";
+import "./style.css";
 
 const Sidebar = (parentEl, documents) => {
   /* 유효성 검사*/
