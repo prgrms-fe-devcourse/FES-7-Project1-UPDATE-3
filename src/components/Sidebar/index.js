@@ -33,7 +33,7 @@ const createDocumentItem = (doc) => {
   const rightToggleArea = document.createElement("div");
   rightToggleArea.className = "right-toggle-area";
 
-  // 헤더 영역 제목 생성
+  // 페이지 제목 생성
   const pageLink = document.createElement("a");
   pageLink.href = `/documents/${doc.id}`;
   const pageTitle = document.createElement("span");
@@ -113,7 +113,7 @@ const Sidebar = async () => {
   sidebarEl.appendChild(sidebarHeader);
   sidebarEl.appendChild(documentListNav);
 
-  // 이벤트리스너(이벤트 위임) sidebarEl에 붙힘
+  // 이벤트리스너(이벤트 위임)
   sidebarEl.addEventListener("click", async (e) => {
     const target = e.target;
     // 접기/펴기 토글 버튼
@@ -138,8 +138,9 @@ const Sidebar = async () => {
           target.textContent = "▼";
         }
       }
-    } else if (target.classList.contains("add-child-button")) {
-      // '+' 버튼 클릭
+    }
+    // '+' 버튼 클릭
+    else if (target.classList.contains("add-child-button")) {
       const parentLi = target.closest(".document-item");
       const parentId = parentLi ? parentLi.dataset.id : null;
       try {
@@ -152,11 +153,36 @@ const Sidebar = async () => {
         renderDocuments(documentListNav, updatedDocuments);
         // 모든 문서 최하단에 [새 페이지 추가] 버튼
         documentListNav.appendChild(BottomAddPageButton);
+
+        // 하위 문서가 보이도록 ul 태그의 hidden 클래스 제거
+        let currentLi = documentListNav.querySelector(`[data-id="${parentId}"]`);
+        if (currentLi) {
+          // 부모 문서부터 상위 노드까지 순회하며 hidden 클래스 제거
+          while (currentLi && currentLi.classList.contains("document-item")) {
+            const childDocsUl = currentLi.querySelector("ul");
+            if (childDocsUl) {
+              childDocsUl.classList.remove("hidden");
+              const toggleButton = currentLi.querySelector(".toggle-button");
+              if (toggleButton) {
+                toggleButton.textContent = "▼";
+              }
+            }
+
+            // 다음 부모 문서로 이동
+            const parentUl = currentLi.parentElement;
+            if (parentUl && parentUl.classList.contains("document-list")) {
+              currentLi = parentUl.closest(".document-item");
+            } else {
+              currentLi = null;
+            }
+          }
+        }
       } catch (error) {
         console.error("문서 생성 중 오류", error);
       }
-    } else if (target.classList.contains("delete-button")) {
-      // '휴지통' 버튼 클릭
+    }
+    // '휴지통' 버튼 클릭
+    else if (target.classList.contains("delete-button")) {
       const parentLi = target.closest(".document-item");
       const documentId = parentLi ? parentLi.dataset.id : null;
       if (documentId) {
@@ -167,8 +193,9 @@ const Sidebar = async () => {
           console.error("문서 삭제 중 오류 발생:", error);
         }
       }
-    } else if (target.closest(".bottom-add-page-area")) {
-      // 최하단 '새 페이지 추가' 버튼 클릭
+    }
+    // 최하단 '새 페이지 추가' 버튼 클릭
+    else if (target.closest(".bottom-add-page-area")) {
       try {
         await apiDocs.create({});
         const updatedDocuments = await apiDocs.getList(); // 기존 문서 목록을 비우고 새로운 문서 목록으로 다시 렌더링
