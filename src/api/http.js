@@ -16,7 +16,7 @@ const request = async ({ url, method = "GET", headers = {}, body }) => {
 
     return await response.json();
   } catch (error) {
-    throw new Error(`Request Error: ${err.message}`);
+    throw new Error(`Request Error: ${error.message}`);
   }
 };
 
