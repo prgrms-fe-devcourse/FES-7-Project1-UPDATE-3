@@ -33,6 +33,10 @@ const createDocumentItem = (doc) => {
   const rightToggleArea = document.createElement("div");
   rightToggleArea.className = "right-toggle-area";
 
+  // 페이지 제목 영역 생성
+  const pageTitleArea = document.createElement("div");
+  pageTitleArea.className = "page-title-area";
+
   // 페이지 제목 생성
   const pageLink = document.createElement("a");
   pageLink.href = `/documents/${doc.id}`;
@@ -40,6 +44,7 @@ const createDocumentItem = (doc) => {
   pageTitle.className = "page-title";
   pageTitle.textContent = doc.title;
   pageLink.appendChild(pageTitle);
+  pageTitleArea.appendChild(pageLink);
 
   // 버튼 요소 생성
   const toggleButton = document.createElement("span");
@@ -57,9 +62,8 @@ const createDocumentItem = (doc) => {
   rightToggleArea.appendChild(addButton);
 
   pageInfo.appendChild(leftToggleArea);
-  pageInfo.appendChild(pageTitle);
+  pageInfo.appendChild(pageTitleArea);
   pageInfo.appendChild(rightToggleArea);
-
   li.appendChild(pageInfo); // </li>
 
   return li;
