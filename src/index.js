@@ -1,10 +1,9 @@
-import "./styles/reset.css";
+import App from "./App";
 
-export default function App() {
-  const main = document.createElement("main");
+export default function render(app) {
+  const root = document.getElementById("root");
 
-
-  main.appendChild(section);
-
-  return main;
+  root?.replaceChildren(app());
 }
+
+render(App);
