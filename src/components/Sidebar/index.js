@@ -1,24 +1,5 @@
 import "./style.css";
-
-// 테스트를 위한 더미 데이터
-const TEST_DOCUMENTS = [
-  {
-    id: 1,
-    title: "최상위 페이지",
-    documents: [
-      {
-        id: 2,
-        title: "하위 페이지 1",
-        documents: [],
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "최상위 페이지 2",
-    documents: [],
-  },
-];
+import apiDocs from "../../api/documents";
 
 const createAddPageButton = () => {
   const addPageButtonArea = document.createElement("div");
@@ -36,7 +17,7 @@ const createAddPageButton = () => {
   return addPageButtonArea;
 };
 
-const Sidebar = () => {
+const Sidebar = async () => {
   /* 사이드바 기본 구조 생성 */
   // 사이드바 전체를 감싸는 aside 생성
   const sidebarEl = document.createElement("aside");
@@ -98,40 +79,6 @@ const Sidebar = () => {
       deleteButton.textContent = "🗑️";
       rightToggleArea.appendChild(deleteButton);
 
-      // 토글 버튼 클릭 이벤트 리스너
-      toggleButton.addEventListener("click", (e) => {
-        e.stopPropagation(); // 접기/펴기 버블링 방지
-
-        // 하위 문서가 있는 경우
-        if (doc.documents && doc.documents.length > 0) {
-          const childDoc = li.querySelector("ul");
-          if (childDoc) {
-            childDoc.classList.toggle("hidden");
-            toggleButton.textContent = childDoc.classList.contains("hidden") ? "▶" : "▼";
-          }
-        }
-        // 하위 문서가 없는 경우
-        else {
-          // 이미 '하위 페이지 없음' 문구가 있는지 확인
-          const existingNoPagesText = li.querySelector(".no-pages-text");
-
-          // 이미 있으면 텍스트 제거
-          if (existingNoPagesText) {
-            li.removeChild(existingNoPagesText);
-            toggleButton.textContent = "▶";
-          }
-          // 없으면 텍스트 생성하여 추가
-          else {
-            const noPagesText = document.createElement("span");
-            noPagesText.className = "no-pages-text";
-            noPagesText.textContent = "하위 페이지 없음";
-
-            li.appendChild(noPagesText);
-            toggleButton.textContent = "▼";
-          }
-        }
-      });
-
       // <div>
       pageInfo.appendChild(leftToggleArea);
       pageInfo.appendChild(pageTitle);
@@ -154,7 +101,8 @@ const Sidebar = () => {
     parent.appendChild(ul);
   };
 
-  renderDocuments(documentListNav, TEST_DOCUMENTS); // 재귀 호출, 하위 문서 있으면 렌더링
+  const documents = await apiDocs.getList();
+  renderDocuments(documentListNav, documents); // 재귀 호출, 하위 문서 있으면 렌더링
 
   // 모든 문서 최하단에 [새 페이지 추가] 버튼
   const BottomAddPageButton = createAddPageButton();
@@ -163,6 +111,44 @@ const Sidebar = () => {
   /* 렌더링 결과물 추가 */
   sidebarEl.appendChild(sidebarHeader);
   sidebarEl.appendChild(documentListNav);
+
+  // 이벤트리스너(이벤트 위임) sidebarEl에 붙힘
+  sidebarEl.addEventListener("click", (e) => {
+    const target = e.target;
+    // 접기/펴기 토글 버튼
+    if (target.classList.contains("toggle-button")) {
+      const parentLi = target.closest(".document-item");
+      const childDocs = parentLi.querySelector("ul");
+
+      if (childDocs) {
+        childDocs.classList.toggle("hidden");
+        target.textContent = childDocs.classList.contains("hidden") ? "▶" : "▼";
+      } else {
+        // 하위 페이지가 없는 경우 처리 (토글 시 '하위 페이지 없음' 텍스트)
+        const noPagesText = parentLi.querySelector(".no-pages-text");
+        if (noPagesText) {
+          parentLi.removeChild(noPagesText);
+          target.textContent = "▶";
+        } else {
+          const newNoPagesText = document.createElement("span");
+          newNoPagesText.className = "no-pages-text";
+          newNoPagesText.textContent = "하위 페이지 없음";
+          parentLi.appendChild(newNoPagesText);
+          target.textContent = "▼";
+        }
+      }
+    } else if (target.classList.contains("add-child-button")) {
+      // '+' 버튼 클릭
+      const parentLi = target.closest(".document-item");
+      const parentId = parentLi ? parentLi.dataset.id : null;
+      console.log("추가");
+    } else if (target.classList.contains("delete-button")) {
+      // '휴지통' 버튼 클릭
+      const parentLi = target.closest(".document-item");
+      const documentId = parentLi ? parentLi.dataset.id : null;
+      console.log("삭제");
+    }
+  });
 
   // 생성된 aside 요소를 반환
   return sidebarEl;
