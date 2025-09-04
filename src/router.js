@@ -25,7 +25,6 @@ export function createRouter() {
   };
 
   const handleLinkClick = (event) => {
-    console.log(">>>>>>>>>>>>>>>>", event.target);
     const a = event.target.closest("a");
     if (a && a.href.startsWith(location.origin)) {
       event.preventDefault();
