@@ -79,7 +79,7 @@
 .page-title-area {
   flex-grow: 1;
   overflow: hidden;
-  text-overflow: ellpisis;
+  text-overflow: ellipsis;
   text-decoration: none;
   color: inherit;
 }
