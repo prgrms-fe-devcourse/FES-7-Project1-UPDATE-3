@@ -1,5 +1,6 @@
 import "./style.css";
 import apiDocs from "../../api/documents";
+import underIcon from "/public/assets/under.svg?url";
 
 // 하단 새 페이지 추가 버튼 생성
 const createAddPageButton = () => {
@@ -45,9 +46,10 @@ const createDocumentItem = (doc) => {
   pageTitleArea.appendChild(pageLink);
 
   // 버튼 요소 생성
-  const toggleButton = document.createElement("span");
+  const toggleButton = document.createElement("img");
   toggleButton.className = "toggle-button";
-  toggleButton.textContent = "▶";
+  toggleButton.src = underIcon;
+  toggleButton.alt = "under Icon";
   const deleteButton = document.createElement("span");
   deleteButton.className = "delete-button";
   deleteButton.textContent = "🗑️";
@@ -102,7 +104,7 @@ const Sidebar = async () => {
   };
   // API 호출 및 렌더링
   const documents = await apiDocs.getList();
-  console.log(documents);
+  // console.log(documents);
   renderDocuments(documentListNav, documents); // 재귀 호출, 하위 문서 있으면 렌더링
 
   // 모든 문서의 최하단에 [새 페이지 추가] 버튼
@@ -124,20 +126,21 @@ const Sidebar = async () => {
 
       if (childDocs) {
         childDocs.classList.toggle("hidden");
-        target.textContent = childDocs.classList.contains("hidden") ? "▶" : "▼";
+        // 하위 문서의 hidden 클래스 상태에 따라 rotated 클래스를 토글합니다.
+        target.classList.toggle("rotated", !childDocs.classList.contains("hidden"));
       } else {
         // 하위 페이지가 없는 경우 처리 (토글 시 '하위 페이지 없음' 텍스트)
         const noPagesText = parentLi.querySelector(".no-pages-text");
         if (noPagesText) {
           parentLi.removeChild(noPagesText);
-          target.textContent = "▶";
         } else {
           const newNoPagesText = document.createElement("span");
           newNoPagesText.className = "no-pages-text";
           newNoPagesText.textContent = "하위 페이지 없음";
           parentLi.appendChild(newNoPagesText);
-          target.textContent = "▼";
         }
+        // 하위 페이지 유무와 상관없이 버튼 클릭 시 rotated 클래스를 토글합니다.
+        target.classList.toggle("rotated");
       }
     }
     // '+' 버튼 클릭
@@ -165,7 +168,7 @@ const Sidebar = async () => {
               childDocsUl.classList.remove("hidden");
               const toggleButton = currentLi.querySelector(".toggle-button");
               if (toggleButton) {
-                toggleButton.textContent = "▼";
+                toggleButton.classList.add("rotated");
               }
             }
 

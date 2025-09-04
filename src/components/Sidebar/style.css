@@ -68,6 +68,11 @@
   transition: transform 0.2s;
 }
 
+/* 토글 버튼 회전 효과 */
+.toggle-button.rotated {
+  transform: rotate(-90deg);
+}
+
 /* 페이지 제목 */
 .page-title {
   flex-grow: 1;
