@@ -3,6 +3,7 @@ import apiDocs from "../../api/documents";
 import underIcon from "/public/assets/under.svg?url";
 import plusIcon from "/public/assets/plus.svg?url";
 import deleteIcon from "/public/assets/trash.svg?url";
+import pageIcon from "/public/assets/page.svg?url";
 
 // 하단 새 페이지 추가 버튼 생성
 const createAddPageButton = () => {
@@ -50,8 +51,8 @@ const createDocumentItem = (doc) => {
   // 버튼 요소 생성
   const toggleButton = document.createElement("img");
   toggleButton.className = "toggle-button";
-  toggleButton.src = underIcon;
-  toggleButton.alt = "under Icon";
+  toggleButton.src = pageIcon;
+  toggleButton.alt = "page Icon";
   const deleteButton = document.createElement("img");
   deleteButton.className = "delete-button";
   deleteButton.src = deleteIcon;
