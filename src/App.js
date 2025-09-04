@@ -1,4 +1,5 @@
 import "./styles/reset.css";
+import "./styles/styles.css";
 import { createRouter } from "./router.js";
 import Sidebar from "./components/Sidebar/index.js";
 import Editor from "./components/Editor/index.js";
