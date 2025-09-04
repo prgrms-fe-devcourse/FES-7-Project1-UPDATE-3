@@ -13,11 +13,8 @@ export default async function Editor({ id }) {
   section.appendChild(title);
   section.appendChild(contents);
 
-  /* url 에서 id 가져오기 */
-  const urlId = window.location.pathname.split("/")[2];
-
   /* api */
-  const docData = await apiDocs.get(urlId);
+  const docData = await apiDocs.get(id);
 
   /* 문서 내용 렌더링 */
   // 텍스트 입력 가능
