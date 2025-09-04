@@ -1,6 +1,8 @@
 import "./style.css";
 import apiDocs from "../../api/documents";
 import underIcon from "/public/assets/under.svg?url";
+import plusIcon from "/public/assets/plus.svg?url";
+import deleteIcon from "/public/assets/trash.svg?url";
 
 // 하단 새 페이지 추가 버튼 생성
 const createAddPageButton = () => {
@@ -50,12 +52,14 @@ const createDocumentItem = (doc) => {
   toggleButton.className = "toggle-button";
   toggleButton.src = underIcon;
   toggleButton.alt = "under Icon";
-  const deleteButton = document.createElement("span");
+  const deleteButton = document.createElement("img");
   deleteButton.className = "delete-button";
-  deleteButton.textContent = "🗑️";
-  const addButton = document.createElement("span");
+  deleteButton.src = deleteIcon;
+  deleteButton.alt = "under Icon";
+  const addButton = document.createElement("img");
   addButton.className = "add-child-button";
-  addButton.textContent = "+";
+  addButton.src = plusIcon;
+  addButton.alt = "under Icon";
 
   leftToggleArea.appendChild(toggleButton);
   rightToggleArea.appendChild(deleteButton);
