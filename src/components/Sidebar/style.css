@@ -214,7 +214,7 @@
 }
 
 /* document-item에 마우스 올리면 버튼 영역 보임 */
-.document-item:hover .right-toggle-area {
+.document-item .page-info:hover .right-toggle-area {
   opacity: 1;
 }
 
