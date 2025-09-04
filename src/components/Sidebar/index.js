@@ -40,10 +40,8 @@ const createDocumentItem = (doc) => {
   // 페이지 제목 생성
   const pageLink = document.createElement("a");
   pageLink.href = `/documents/${doc.id}`;
-  const pageTitle = document.createElement("span");
-  pageTitle.className = "page-title";
-  pageTitle.textContent = doc.title;
-  pageLink.appendChild(pageTitle);
+  pageLink.textContent = doc.title; // <a> 태그에 직접 텍스트를 추가합니다.
+  pageLink.className = "page-title"; // span의 클래스를 a태그로 이동
   pageTitleArea.appendChild(pageLink);
 
   // 버튼 요소 생성
