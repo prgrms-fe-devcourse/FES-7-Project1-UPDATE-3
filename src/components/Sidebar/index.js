@@ -109,7 +109,6 @@ const Sidebar = async () => {
   };
   // API 호출 및 렌더링
   const documents = await apiDocs.getList();
-  // console.log(documents);
   renderDocuments(documentListNav, documents); // 재귀 호출, 하위 문서 있으면 렌더링
 
   // 모든 문서의 최하단에 [새 페이지 추가] 버튼
@@ -121,7 +120,7 @@ const Sidebar = async () => {
   sidebarEl.appendChild(sidebarHeader);
   sidebarEl.appendChild(documentListNav);
 
-  // 이벤트리스너(이벤트 위임)
+  /* 이벤트리스너(이벤트 위임) */
   sidebarEl.addEventListener("click", async (e) => {
     const target = e.target;
     // 접기/펴기 토글 버튼
@@ -166,7 +165,7 @@ const Sidebar = async () => {
         // 하위 문서가 보이도록 ul 태그의 hidden 클래스 제거
         let currentLi = documentListNav.querySelector(`[data-id="${parentId}"]`);
         if (currentLi) {
-          // 부모 문서부터 상위 노드까지 순회하며 hidden 클래스 제거
+          // 부모 문서부터 최상위 문서까지 순회하며 hidden 클래스 제거
           while (currentLi && currentLi.classList.contains("document-item")) {
             const childDocsUl = currentLi.querySelector("ul");
             if (childDocsUl) {
@@ -174,6 +173,7 @@ const Sidebar = async () => {
               const toggleButton = currentLi.querySelector(".toggle-button");
               if (toggleButton) {
                 toggleButton.classList.add("rotated");
+                toggleButton.src = underIcon;
               }
             }
 
@@ -215,6 +215,27 @@ const Sidebar = async () => {
         documentListNav.appendChild(BottomAddPageButton);
       } catch (error) {
         console.error("루트 문서 생성 중 오류 발생:", error);
+      }
+    }
+  });
+
+  /* 마우스 호버 이벤트 (이벤트 위임) */
+  sidebarEl.addEventListener("mouseover", (e) => {
+    const documentItem = e.target.closest(".document-item");
+    if (documentItem) {
+      const toggleButton = documentItem.querySelector(".toggle-button");
+      toggleButton.src = underIcon;
+    }
+  });
+  // 마우스 아웃
+  sidebarEl.addEventListener("mouseout", (e) => {
+    const documentItem = e.target.closest(".document-item");
+    if (documentItem && !documentItem.contains(e.relatedTarget)) {
+      const toggleButton = documentItem.querySelector(".toggle-button");
+      // 토글 버튼이 'rotated' 클래스를 가지고 있지 않을 때만 아이콘을 복구시킴
+      // 펼친 상태에서는 화살표로 둔다는 뜻
+      if (toggleButton && !toggleButton.classList.contains("rotated")) {
+        toggleButton.src = pageIcon;
       }
     }
   });
